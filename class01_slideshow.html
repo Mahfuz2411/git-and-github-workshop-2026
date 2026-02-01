@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 1 — Git + GitHub Essentials & Markdown</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1e3a 0%, #2d3561 50%, #1a1e3a 100%);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            padding: 60px;
+            text-align: left;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h1 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            color: #ffd700;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide h2 {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-bottom: 3px solid #ffd700;
+            padding-bottom: 15px;
+        }
+
+        .slide h3 {
+            font-size: 2rem;
+            margin: 25px 0 15px 0;
+            color: #6dd5ed;
+        }
+
+        .slide p,
+        .slide li {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .slide ul {
+            margin-left: 40px;
+            list-style-type: disc;
+        }
+
+        .slide code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #6dd5ed;
+            font-size: 1.3rem;
+        }
+
+        .slide pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid #ffd700;
+        }
+
+        .slide pre code {
+            background: none;
+            padding: 0;
+            color: #6dd5ed;
+            font-size: 1.2rem;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #ffd700;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .controls button:hover {
+            background: #ffd700;
+            color: #1a1e3a;
+            transform: scale(1.05);
+        }
+
+        .controls button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .banner-slide {
+            text-align: center;
+        }
+
+        .banner-slide img {
+            max-width: 800px;
+            width: 90%;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1e3a;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        a {
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffd700 !important;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px;
+            }
+
+            .slide h1 {
+                font-size: 3.5rem;
+            }
+
+            .slide h2 {
+                font-size: 2.5rem;
+            }
+
+            .slide h3 {
+                font-size: 1.8rem;
+            }
+
+            .slide p,
+            .slide li {
+                font-size: 1.3rem;
+            }
+
+            .controls button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+                width: 95%;
+            }
+
+            .slide h1 {
+                font-size: 2.5rem !important;
+            }
+
+            .slide h2 {
+                font-size: 1.8rem;
+            }
+
+            .slide h3 {
+                font-size: 1.4rem;
+            }
+
+            .slide p,
+            .slide li {
+                font-size: 1rem;
+            }
+
+            .slide code {
+                font-size: 0.9rem;
+            }
+
+            .slide pre code {
+                font-size: 0.85rem;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .controls {
+                bottom: 15px;
+                right: 15px;
+                gap: 10px;
+            }
+
+            .controls button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .slide-number {
+                bottom: 15px;
+                left: 15px;
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide h1 {
+                font-size: 2rem !important;
+            }
+
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+
+            .slide p,
+            .slide li {
+                font-size: 0.9rem;
+            }
+
+            .controls button {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Class Title -->
+        <div class="slide active banner-slide">
+            <h1 style="font-size: 4.5rem; margin-bottom: 30px;">Day 1</h1>
+            <h2 style="font-size: 2.5rem; color: #6dd5ed; border: none;">Git + GitHub Essentials & Markdown</h2>
+        </div>
+
+        <!-- Slide 2: Objectives -->
+        <div class="slide">
+            <h2>Objectives</h2>
+            <ul>
+                <li>Understand <span class="highlight">why version control matters</span></li>
+                <li>Learn core <span class="highlight">Git concepts</span> and commands</li>
+                <li>Connect local repo to <span class="highlight">GitHub</span></li>
+                <li>Master <span class="highlight">Markdown</span> for documentation</li>
+                <li>Hands-on: Create and push your first repository!</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: What is Git? -->
+        <div class="slide">
+            <h2>What is Git?</h2>
+            <h3>Version Control System (VCS)</h3>
+            <ul>
+                <li><strong>Track changes</strong> in your code over time</li>
+                <li><strong>Collaborate</strong> with teammates without conflicts</li>
+                <li><strong>Revert</strong> to previous versions when needed</li>
+                <li><strong>Branch</strong> to experiment safely</li>
+            </ul>
+            <p style="margin-top: 30px; font-size: 1.3rem; color: #ffd700;">💡 Git is the most popular VCS used by
+                millions of developers worldwide</p>
+        </div>
+
+        <!-- Slide 4: Git Configuration -->
+        <div class="slide">
+            <h2>Git Configuration (First Time Setup)</h2>
+            <p style="margin-bottom: 20px;">Before using Git, configure your identity:</p>
+            <pre><code># Set your name
+git config --global user.name "Your Name"
+
+# Set your email
+git config --global user.email "your.email@example.com"
+
+# Check your configuration
+git config --list
+
+# Example:
+git config --global user.name "Mahfuz Ibne Syful"
+git config --global user.email "mahfuzibnesyful24@gmail.com"</code></pre>
+            <p style="margin-top: 20px; font-size: 1.2rem; color: #ffd700;">💡 Use the same email as your GitHub account!</p>
+        </div>
+
+        <!-- Slide 5: Git Core Commands -->
+        <div class="slide">
+            <h2>Git Core Commands</h2>
+            <pre><code># Initialize a new repository
+git init
+
+# Check status of files
+git status
+
+# Stage files for commit
+git add &lt;file&gt;
+git add .
+
+# Commit changes
+git commit -m "Your message"
+
+# View commit history
+git log --oneline --graph --decorate</code></pre>
+        </div>
+
+        <!-- Slide 6: What is GitHub? -->
+        <div class="slide">
+            <h2>What is GitHub?</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Cloud Platform for Git</h3>
+                    <ul>
+                        <li>Remote hosting for repos</li>
+                        <li>Collaboration tools</li>
+                        <li>Issue tracking</li>
+                        <li>Code review (PRs)</li>
+                        <li>CI/CD workflows</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Why GitHub?</h3>
+                    <ul>
+                        <li>Backup your code</li>
+                        <li>Share with team</li>
+                        <li>Portfolio showcase</li>
+                        <li>Open source community</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Connecting to GitHub -->
+        <div class="slide">
+            <h2>Connecting to GitHub</h2>
+            <pre><code># Clone existing repo
+git clone &lt;url&gt;
+
+# Add remote to local repo
+git remote add origin &lt;url&gt;
+
+# Push to GitHub
+git push -u origin main
+
+# Pull latest changes
+git pull</code></pre>
+        </div>
+
+        <!-- Slide 7: Markdown Basics -->
+        <div class="slide">
+            <h2>Markdown Basics</h2>
+            <p>Markdown is a lightweight markup language for formatting text</p>
+            <pre><code># Heading 1
+## Heading 2
+### Heading 3
+
+**bold text**
+*italic text*
+
+- Bullet point
+1. Numbered list
+
+[Link text](url)
+![Image](image-url)
+
+```code block```
+`inline code`</code></pre>
+        </div>
+
+        <!-- Slide 8: README Best Practices -->
+        <div class="slide">
+            <h2>README.md Best Practices</h2>
+            <ul>
+                <li><strong>Project title</strong> and description</li>
+                <li><strong>Installation</strong> instructions</li>
+                <li><strong>Usage</strong> examples</li>
+                <li><strong>Contributing</strong> guidelines</li>
+                <li><strong>License</strong> information</li>
+                <li>Add badges, screenshots, demos!</li>
+            </ul>
+        </div>
+
+        <!-- Slide 9: Hands-on Exercise -->
+        <div class="slide">
+            <h2>🛠️ Hands-on Exercise</h2>
+            <h3>Let's Do This Together!</h3>
+            <ol style="font-size: 1.4rem;">
+                <li>Create a new folder for your project</li>
+                <li>Initialize Git: <code>git init</code></li>
+                <li>Create <code>README.md</code> with Markdown</li>
+                <li>Stage and commit: <code>git add . && git commit -m "Initial commit"</code></li>
+                <li>Create GitHub repo (on github.com)</li>
+                <li>Add remote and push: <code>git remote add origin &lt;url&gt;</code></li>
+                <li>Verify your repo on GitHub! 🎉</li>
+            </ol>
+        </div>
+
+        <!-- Slide 10: Homework -->
+        <div class="slide">
+            <h2>📚 Homework</h2>
+            <ul>
+                <li>Make one small change to your README.md</li>
+                <li>Commit and push the change</li>
+                <li>Be ready to open a Pull Request on Day 2!</li>
+            </ul>
+            <h3 style="margin-top: 50px;">Resources</h3>
+            <ul>
+                <li>Git docs: <a href="https://git-scm.com/docs" target="_blank"
+                        style="color: #6dd5ed; text-decoration: none; font-weight: bold;">git-scm.com/docs</a></li>
+                <li>Markdown guide: <a href="https://www.markdownguide.org/" target="_blank"
+                        style="color: #6dd5ed; text-decoration: none; font-weight: bold;">markdownguide.org</a></li>
+                <li>GitHub Guides: <a href="https://docs.github.com/en/get-started" target="_blank"
+                        style="color: #6dd5ed; text-decoration: none; font-weight: bold;">docs.github.com/en/get-started</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 11: Thank You -->
+        <div class="slide banner-slide">
+            <h1 style="font-size: 5rem;">Thank You! 🎉</h1>
+            <p style="font-size: 2rem; margin-top: 30px;">Questions?</p>
+            <p style="margin-top: 50px; font-size: 1.5rem; color: #6dd5ed;">See you on Day 2 for PRs & Collaboration!
+            </p>
+        </div>
+    </div>
+
+    <div class="slide-number">
+        <span id="current-slide">1</span> / <span id="total-slides">12</span>
+    </div>
+
+    <div class="controls">
+        <button id="prev-btn" onclick="prevSlide()">← Previous</button>
+        <button id="next-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentSlideNum = document.getElementById('current-slide');
+        const totalSlidesNum = document.getElementById('total-slides');
+
+        totalSlidesNum.textContent = totalSlides;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            if (n >= totalSlides) currentSlide = totalSlides - 1;
+            if (n < 0) currentSlide = 0;
+
+            slides[currentSlide].classList.add('active');
+            currentSlideNum.textContent = currentSlide + 1;
+
+            // Update button states
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'Home') {
+                currentSlide = 0;
+                showSlide(currentSlide);
+            } else if (e.key === 'End') {
+                currentSlide = totalSlides - 1;
+                showSlide(currentSlide);
+            }
+        });
+
+        // Swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) prevSlide();
+        }
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+
+</html>
