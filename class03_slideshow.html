@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 3 — Review & Team Project Workshop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1e3a 0%, #2d3561 50%, #1a1e3a 100%);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            padding: 60px;
+            text-align: left;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide h1 {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            color: #ffd700;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide h2 {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            color: #ffffff;
+            border-bottom: 3px solid #ffd700;
+            padding-bottom: 15px;
+        }
+
+        .slide h3 {
+            font-size: 2rem;
+            margin: 25px 0 15px 0;
+            color: #6dd5ed;
+        }
+
+        .slide p,
+        .slide li {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .slide ul {
+            margin-left: 40px;
+            list-style-type: disc;
+        }
+
+        .slide ol {
+            margin-left: 40px;
+            list-style-type: decimal;
+        }
+
+        .slide code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #6dd5ed;
+            font-size: 1.3rem;
+        }
+
+        .slide pre {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid #ffd700;
+        }
+
+        .slide pre code {
+            background: none;
+            padding: 0;
+            color: #6dd5ed;
+            font-size: 1.2rem;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .controls button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #ffd700;
+            color: #fff;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .controls button:hover {
+            background: #ffd700;
+            color: #1a1e3a;
+            transform: scale(1.05);
+        }
+
+        .controls button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .banner-slide {
+            text-align: center;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1e3a;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        a {
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffd700 !important;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px;
+            }
+
+            .slide h1 {
+                font-size: 3.5rem;
+            }
+
+            .slide h2 {
+                font-size: 2.5rem;
+            }
+
+            .slide h3 {
+                font-size: 1.8rem;
+            }
+
+            .slide p,
+            .slide li {
+                font-size: 1.3rem;
+            }
+
+            .controls button {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+                width: 95%;
+            }
+
+            .slide h1 {
+                font-size: 2.5rem !important;
+            }
+
+            .slide h2 {
+                font-size: 1.8rem;
+            }
+
+            .slide h3 {
+                font-size: 1.4rem;
+            }
+
+            .slide p,
+            .slide li {
+                font-size: 1rem;
+            }
+
+            .slide code {
+                font-size: 0.9rem;
+            }
+
+            .slide pre code {
+                font-size: 0.85rem;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .controls {
+                bottom: 15px;
+                right: 15px;
+                gap: 10px;
+            }
+
+            .controls button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .slide-number {
+                bottom: 15px;
+                left: 15px;
+                font-size: 1rem;
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .slide h1 {
+                font-size: 2rem !important;
+            }
+
+            .slide h2 {
+                font-size: 1.5rem;
+            }
+
+            .slide p,
+            .slide li {
+                font-size: 0.9rem;
+            }
+
+            .controls button {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active banner-slide">
+            <h1 style="font-size: 4.5rem; margin-bottom: 30px;">Day 3</h1>
+            <h2 style="font-size: 2.5rem; color: #6dd5ed; border: none;">Review & Team Project Workshop</h2>
+        </div>
+
+        <!-- Slide 2: Objectives -->
+        <div class="slide">
+            <h2>Objectives</h2>
+            <ul>
+                <li>Review all concepts from <span class="highlight">Day 1 & Day 2</span></li>
+                <li>Understand <span class="highlight">team collaboration</span> workflows</li>
+                <li>Learn how <span class="highlight">2+ developers</span> work together</li>
+                <li>Practice <span class="highlight">Pull Requests</span> and code reviews</li>
+                <li>Build a <span class="highlight">mini team project</span> from scratch</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Day 1 Review -->
+        <div class="slide">
+            <h2>Day 1 Review: Git & GitHub Basics</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Git Fundamentals</h3>
+                    <ul style="font-size: 1.3rem;">
+                        <li><code>git init</code> - Initialize repo</li>
+                        <li><code>git add</code> - Stage files</li>
+                        <li><code>git commit</code> - Save changes</li>
+                        <li><code>git status</code> - Check state</li>
+                        <li><code>git log</code> - View history</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>GitHub Remote</h3>
+                    <ul style="font-size: 1.3rem;">
+                        <li><code>git remote add</code></li>
+                        <li><code>git push</code></li>
+                        <li><code>git pull</code></li>
+                        <li><code>git clone</code></li>
+                        <li>README & Markdown</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Day 2 Review -->
+        <div class="slide">
+            <h2>Day 2 Review: Advanced Workflows</h2>
+            <div class="two-column">
+                <div>
+                    <h3>Branching & Merging</h3>
+                    <ul style="font-size: 1.3rem;">
+                        <li><code>git branch</code></li>
+                        <li><code>git checkout/switch</code></li>
+                        <li><code>git merge</code></li>
+                        <li>Conflict resolution</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Advanced Commands</h3>
+                    <ul style="font-size: 1.3rem;">
+                        <li><code>git rebase</code></li>
+                        <li><code>git rebase -i</code></li>
+                        <li><code>git reflog</code></li>
+                        <li><code>git revert</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: How Teams Work with Git -->
+        <div class="slide">
+            <h2>How Teams Work with Git</h2>
+            <p style="font-size: 1.5rem; margin-bottom: 30px;">When 2+ developers collaborate on a project:</p>
+            <ul>
+                <li><span class="highlight">Shared Repository</span> - Everyone works on the same codebase</li>
+                <li><span class="highlight">Feature Branches</span> - Each developer works on separate branches</li>
+                <li><span class="highlight">Regular Sync</span> - Pull updates from main frequently</li>
+                <li><span class="highlight">Pull Requests</span> - Request to merge your changes</li>
+                <li><span class="highlight">Code Review</span> - Team members review each other's code</li>
+                <li><span class="highlight">Merge</span> - Approved changes get merged to main</li>
+            </ul>
+        </div>
+
+        <!-- Slide 6: Team Collaboration Workflow -->
+        <div class="slide">
+            <h2>Team Collaboration Workflow</h2>
+            <svg viewBox="0 0 800 400" style="width: 100%; max-width: 800px; margin: 30px auto; display: block;">
+                <!-- Main branch -->
+                <line x1="50" y1="200" x2="750" y2="200" stroke="#ffd700" stroke-width="4" />
+                <text x="400" y="190" fill="#ffd700" font-size="18" text-anchor="middle" font-weight="bold">main branch</text>
+                
+                <!-- Developer 1 branch -->
+                <line x1="200" y1="200" x2="200" y2="100" stroke="#6dd5ed" stroke-width="3" />
+                <line x1="200" y1="100" x2="450" y2="100" stroke="#6dd5ed" stroke-width="3" />
+                <line x1="450" y1="100" x2="450" y2="200" stroke="#6dd5ed" stroke-width="3" stroke-dasharray="5,5" />
+                <text x="325" y="90" fill="#6dd5ed" font-size="16" text-anchor="middle">Developer 1 (feature-A)</text>
+                <text x="470" y="150" fill="#51cf66" font-size="14">PR #1</text>
+                
+                <!-- Developer 2 branch -->
+                <line x1="300" y1="200" x2="300" y2="300" stroke="#ff6b6b" stroke-width="3" />
+                <line x1="300" y1="300" x2="600" y2="300" stroke="#ff6b6b" stroke-width="3" />
+                <line x1="600" y1="300" x2="600" y2="200" stroke="#ff6b6b" stroke-width="3" stroke-dasharray="5,5" />
+                <text x="450" y="320" fill="#ff6b6b" font-size="16" text-anchor="middle">Developer 2 (feature-B)</text>
+                <text x="620" y="250" fill="#51cf66" font-size="14">PR #2</text>
+                
+                <!-- Commits -->
+                <circle cx="50" cy="200" r="8" fill="#ffd700" />
+                <circle cx="200" cy="200" r="8" fill="#ffd700" />
+                <circle cx="300" cy="200" r="8" fill="#ffd700" />
+                <circle cx="450" cy="200" r="8" fill="#51cf66" />
+                <circle cx="600" cy="200" r="8" fill="#51cf66" />
+                <circle cx="750" cy="200" r="8" fill="#ffd700" />
+                
+                <circle cx="200" cy="100" r="6" fill="#6dd5ed" />
+                <circle cx="325" cy="100" r="6" fill="#6dd5ed" />
+                <circle cx="450" cy="100" r="6" fill="#6dd5ed" />
+                
+                <circle cx="300" cy="300" r="6" fill="#ff6b6b" />
+                <circle cx="450" cy="300" r="6" fill="#ff6b6b" />
+                <circle cx="600" cy="300" r="6" fill="#ff6b6b" />
+            </svg>
+        </div>
+
+        <!-- Slide 7: What is a Pull Request? -->
+        <div class="slide">
+            <h2>What is a Pull Request?</h2>
+            <p style="font-size: 1.5rem; margin-bottom: 30px;">A Pull Request (PR) is a request to merge your changes into another branch (usually <code>main</code>)</p>
+            <h3>PR Workflow</h3>
+            <ol>
+                <li>Create a <span class="highlight">feature branch</span></li>
+                <li>Make commits and <span class="highlight">push</span> to GitHub</li>
+                <li><span class="highlight">Open PR</span> on GitHub</li>
+                <li><span class="highlight">Request reviewers</span></li>
+                <li><span class="highlight">Address feedback</span> if needed</li>
+                <li><span class="highlight">Merge</span> when approved ✅</li>
+            </ol>
+        </div>
+
+        <!-- Slide 8: Creating Your First PR -->
+        <div class="slide">
+            <h2>Creating Your First PR</h2>
+            <pre><code># 1. Fork/Clone the repository
+git clone https://github.com/username/repo.git
+cd repo
+
+# 2. Create a new branch
+git checkout -b feature/my-feature
+
+# 3. Make changes and commit
+git add .
+git commit -m "Add my feature"
+
+# 4. Push to your fork
+git push origin feature/my-feature
+
+# 5. Go to GitHub and click "Create Pull Request"
+# 6. Add title, description, and request reviewers</code></pre>
+        </div>
+
+        <!-- Slide 9: Code Review Best Practices -->
+        <div class="slide">
+            <h2>Code Review Best Practices</h2>
+            <div class="two-column">
+                <div>
+                    <h3>As a Reviewer</h3>
+                    <ul>
+                        <li>Be <span class="highlight">respectful</span> & constructive</li>
+                        <li>Focus on <span class="highlight">code</span>, not person</li>
+                        <li>Ask questions to understand</li>
+                        <li>Suggest alternatives</li>
+                        <li>Approve when ready ✅</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>As an Author</h3>
+                    <ul>
+                        <li>Don't take feedback <span class="highlight">personally</span></li>
+                        <li>Respond to all comments</li>
+                        <li>Explain your approach</li>
+                        <li>Make requested changes</li>
+                        <li>Thank reviewers 🙏</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Team Project Exercise -->
+        <div class="slide">
+            <h2>🛠️ Team Project Exercise</h2>
+            <h3>Let's Build Together!</h3>
+            <ol style="font-size: 1.4rem;">
+                <li><span class="highlight">Form teams</span> of 2-4 people</li>
+                <li><span class="highlight">Create</span> a simple project together (e.g., team members list)</li>
+                <li>Each person <span class="highlight">creates a branch</span></li>
+                <li>Each person <span class="highlight">adds their info</span> (name, skills, bio)</li>
+                <li>Each person <span class="highlight">opens a PR</span></li>
+                <li><span class="highlight">Review</span> each other's PRs</li>
+                <li><span class="highlight">Merge</span> all changes</li>
+            </ol>
+            <p style="margin-top: 30px; font-size: 1.3rem; color: #51cf66;">💡 This simulates real team development!</p>
+        </div>
+
+        <!-- Slide 11: Common Team Challenges -->
+        <div class="slide">
+            <h2>Common Team Challenges</h2>
+            <h3>Merge Conflicts</h3>
+            <ul>
+                <li>Happen when multiple people edit the same file</li>
+                <li>Resolve by communicating with your team</li>
+                <li>Use <code>git merge</code> or <code>git rebase</code> to resolve</li>
+            </ul>
+            <h3 style="margin-top: 30px;">Keeping Branches in Sync</h3>
+            <ul>
+                <li>Regularly <code>git pull origin main</code> to stay updated</li>
+                <li>Merge main into your branch before creating PR</li>
+            </ul>
+            <h3 style="margin-top: 30px;">When to Pull/Push</h3>
+            <ul>
+                <li><span class="highlight">Pull</span> before starting work</li>
+                <li><span class="highlight">Push</span> at end of day or after major changes</li>
+            </ul>
+        </div>
+
+        <!-- Slide 12: Best Practices for Team Work -->
+        <div class="slide">
+            <h2>Best Practices for Team Work</h2>
+            <ul>
+                <li><span class="highlight">Clear commit messages</span> - Explain what and why</li>
+                <li><span class="highlight">Small, focused PRs</span> - Easier to review</li>
+                <li><span class="highlight">Regular communication</span> - Use Slack, Discord, etc.</li>
+                <li><span class="highlight">Pull before push</span> - Avoid conflicts</li>
+                <li><span class="highlight">Test your changes</span> - Don't break the build</li>
+                <li><span class="highlight">Document your code</span> - Help your teammates understand</li>
+                <li><span class="highlight">Be responsive</span> - Reply to review comments quickly</li>
+            </ul>
+        </div>
+
+        <!-- Slide 13: Homework -->
+        <div class="slide">
+            <h2>📚 Homework</h2>
+            <ul>
+                <li><span class="highlight">Complete the team project</span></li>
+                <li><span class="highlight">Practice reviewing code</span> - Review at least 2 PRs</li>
+                <li><span class="highlight">Explore open source projects</span> on GitHub
+                    <ul style="margin-top: 10px;">
+                        <li>Find a project you're interested in</li>
+                        <li>Read their CONTRIBUTING.md</li>
+                        <li>Look for "good first issue" labels</li>
+                    </ul>
+                </li>
+            </ul>
+            <p style="margin-top: 40px; font-size: 1.3rem; color: #51cf66;">💡 Contributing to open source is a great way to learn!</p>
+        </div>
+
+        <!-- Slide 14: Thank You -->
+        <div class="slide banner-slide">
+            <h1 style="font-size: 5rem;">Thank You! 🎉</h1>
+            <p style="font-size: 2rem; margin-top: 30px;">You're now Git & GitHub ready!</p>
+            <p style="margin-top: 50px; font-size: 1.5rem; color: #6dd5ed;">Keep learning, keep collaborating! 💪</p>
+            <p style="margin-top: 30px; font-size: 1.3rem; color: rgba(255,255,255,0.8);">Questions? Feel free to reach out!</p>
+        </div>
+    </div>
+
+    <div class="slide-number">
+        <span id="current-slide">1</span> / <span id="total-slides">14</span>
+    </div>
+
+    <div class="controls">
+        <button id="prev-btn" onclick="prevSlide()">← Previous</button>
+        <button id="next-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentSlideNum = document.getElementById('current-slide');
+        const totalSlidesNum = document.getElementById('total-slides');
+
+        totalSlidesNum.textContent = totalSlides;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            if (n >= totalSlides) currentSlide = totalSlides - 1;
+            if (n < 0) currentSlide = 0;
+
+            slides[currentSlide].classList.add('active');
+            currentSlideNum.textContent = currentSlide + 1;
+
+            // Update button states
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'Home') {
+                currentSlide = 0;
+                showSlide(currentSlide);
+            } else if (e.key === 'End') {
+                currentSlide = totalSlides - 1;
+                showSlide(currentSlide);
+            }
+        });
+
+        // Swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) prevSlide();
+        }
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+
+</html>
