@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding .gitignore - Resource Document</title>
+    <style>
+        @page {
+            margin: 2cm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: white;
+            color: #000;
+            line-height: 1.6;
+            padding: 40px 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #000;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+
+        h2::after {
+            content: "";
+            display: block;
+            height: 100px;
+            margin-bottom: -100px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #000;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+
+        h3::after {
+            content: "";
+            display: block;
+            height: 80px;
+            margin-bottom: -80px;
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            text-align: justify;
+            color: #000;
+            orphans: 3;
+            widows: 3;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+
+        li {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: #000;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: #000;
+            border: 1px solid #ccc;
+        }
+
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #999;
+            border-left: 4px solid #333;
+            padding: 15px;
+            margin: 12px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            page-break-inside: avoid;
+        }
+
+        .example-box {
+            background: #f5f5f5;
+            border: 1px solid #999;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05rem;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+
+        .highlight {
+            background: #e0e0e0;
+            padding: 2px 4px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .important {
+            color: #c00;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #060;
+            font-weight: bold;
+        }
+
+        .note {
+            background: #f0f0f0;
+            border-left: 4px solid #666;
+            padding: 15px;
+            margin: 18px 0;
+            page-break-inside: avoid;
+        }
+
+        .warning {
+            background: #f5f5f5;
+            border-left: 4px solid #999;
+            padding: 15px;
+            margin: 18px 0;
+            page-break-inside: avoid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            page-break-inside: avoid;
+        }
+
+        th, td {
+            border: 1px solid #666;
+            padding: 10px;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background: #e0e0e0;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid #000;
+            text-align: center;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Cover Page Styles */
+        .cover-page {
+            text-align: center;
+            padding: 100px 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            page-break-after: always;
+        }
+
+        .cover-page h1 {
+            font-size: 4rem;
+            color: #000;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            border-bottom: 4px solid #000;
+            padding-bottom: 20px;
+        }
+
+        .cover-page .subtitle {
+            font-size: 1.8rem;
+            color: #333;
+            font-style: italic;
+            margin-bottom: 60px;
+        }
+
+        .cover-page .metadata {
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .cover-page .metadata p {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .cover-page .logo {
+            font-size: 6rem;
+            margin-bottom: 40px;
+            opacity: 0.2;
+        }
+
+        /* Table of Contents Styles */
+        .toc-page {
+            page-break-after: always;
+            padding: 60px 40px;
+        }
+
+        .toc-page h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #000;
+            padding-bottom: 15px;
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: #000;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .toc-list a:hover {
+            color: #333;
+            background: #f0f0f0;
+            padding-left: 10px;
+        }
+
+        .toc-number {
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .toc-title {
+            flex: 1;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .cover-page {
+                padding: 80px 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            .cover-page h1 {
+                font-size: 2.5rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <div class="logo">📝</div>
+        <h1>Understanding .gitignore</h1>
+        <p class="subtitle">Managing Untracked Files in Git</p>
+        <div class="metadata">
+            <p><strong>A Comprehensive Guide</strong></p>
+            <p>Git & GitHub Workshop</p>
+            <p>NEUB CSE Society</p>
+            <p style="margin-top: 40px; font-size: 1rem; color: #666;">Prepared by: Mahfuz Ibne Syful</p>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc-page">
+        <h2>Table of Contents</h2>
+        <ul class="toc-list">
+            <li>
+                <a href="#section-1">
+                    <span><span class="toc-number">1.</span><span class="toc-title">What is .gitignore?</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-2">
+                    <span><span class="toc-number">2.</span><span class="toc-title">Why Use .gitignore?</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-3">
+                    <span><span class="toc-number">3.</span><span class="toc-title">Creating a .gitignore File</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-4">
+                    <span><span class="toc-number">4.</span><span class="toc-title">Basic Syntax and Patterns</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-5">
+                    <span><span class="toc-number">5.</span><span class="toc-title">Pattern Examples</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-6">
+                    <span><span class="toc-number">6.</span><span class="toc-title">Common .gitignore Patterns</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-7">
+                    <span><span class="toc-number">7.</span><span class="toc-title">Language/Framework Specific</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-8">
+                    <span><span class="toc-number">8.</span><span class="toc-title">Global .gitignore</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-9">
+                    <span><span class="toc-number">9.</span><span class="toc-title">Troubleshooting</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-10">
+                    <span><span class="toc-number">10.</span><span class="toc-title">Best Practices</span></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- section 1 -->
+    <div class="page-break"></div>
+    <h2 id="section-1">1. What is .gitignore?</h2>
+    <p>
+        A <span class="highlight">.gitignore</span> file is a special text file in your Git repository that tells Git which files 
+        or directories to ignore and not track. When Git sees a file or pattern listed in .gitignore, it will not include 
+        those files in version control.
+    </p>
+
+    <h3>Key Points:</h3>
+    <ul>
+        <li>It's a plain text file named exactly <code>.gitignore</code></li>
+        <li>Usually placed in the root directory of your repository</li>
+        <li>Can also be placed in subdirectories for directory-specific rules</li>
+        <li>Uses pattern matching to specify which files to ignore</li>
+        <li>Essential for keeping repositories clean and efficient</li>
+    </ul>
+
+    <div class="note">
+        <strong>📌 Note:</strong> The dot (.) at the beginning of the filename makes it a hidden file on Unix-based 
+        systems (Linux, macOS). On Windows, you may need to enable viewing hidden files to see it.
+    </div>
+
+    <!-- section 2 -->
+    <div class="page-break"></div>
+    <h2 id="section-2">2. Why Use .gitignore?</h2>
+    <p>
+        Using a .gitignore file is crucial for maintaining a clean and efficient Git repository. Here are the main reasons:
+    </p>
+
+    <h3>1. Keep Repository Clean</h3>
+    <p>Prevent unnecessary files from cluttering your repository history.</p>
+
+    <h3>2. Security</h3>
+    <p>Avoid accidentally committing sensitive information like:</p>
+    <ul>
+        <li>API keys and passwords</li>
+        <li>Environment configuration files (.env)</li>
+        <li>Database credentials</li>
+        <li>Private SSH keys</li>
+    </ul>
+
+    <h3>3. Performance</h3>
+    <p>Ignore large or frequently changing files that don't need version control:</p>
+    <ul>
+        <li>Compiled code (binaries, executables)</li>
+        <li>Build artifacts</li>
+        <li>Log files</li>
+        <li>Cache directories</li>
+        <li>Dependency folders (node_modules, vendor, etc.)</li>
+    </ul>
+
+    <h3>4. Avoid Conflicts</h3>
+    <p>Prevent merge conflicts from user-specific or machine-specific files:</p>
+    <ul>
+        <li>IDE/editor configuration files</li>
+        <li>Operating system files (.DS_Store, Thumbs.db)</li>
+        <li>Personal settings</li>
+    </ul>
+
+    <div class="warning">
+        <strong>⚠ Important:</strong> Never commit sensitive credentials or API keys to Git. Once committed, 
+        they remain in the repository history even if you delete them later. Use .gitignore to prevent this.
+    </div>
+
+    <!-- section 3 -->
+    <div class="page-break"></div>
+    <h2 id="section-3">3. Creating a .gitignore File</h2>
+
+    <h3>Method 1: Using Terminal/Command Line</h3>
+    <pre><code># On Linux/macOS
+touch .gitignore
+
+# On Windows (Command Prompt)
+echo. > .gitignore
+
+# On Windows (PowerShell)
+New-Item .gitignore</code></pre>
+
+    <h3>Method 2: Using a Text Editor</h3>
+    <ol>
+        <li>Open your text editor or IDE</li>
+        <li>Create a new file</li>
+        <li>Save it as <code>.gitignore</code> in your repository root</li>
+        <li>Make sure it doesn't have any extension (not .gitignore.txt)</li>
+    </ol>
+
+    <h3>Method 3: Using GitHub</h3>
+    <p>When creating a new repository on GitHub, you can choose a .gitignore template for your project type 
+    (Python, Node.js, Java, etc.). GitHub provides pre-made templates for common languages and frameworks.</p>
+
+    <div class="note">
+        <strong>💡 Tip:</strong> Visit <code>github.com/github/gitignore</code> to browse official .gitignore 
+        templates for different programming languages and frameworks.
+    </div>
+
+    <!-- section 4 -->
+    <div class="page-break"></div>
+    <h2 id="section-4">4. Basic Syntax and Patterns</h2>
+
+    <p>The .gitignore file uses pattern matching syntax to specify which files to ignore:</p>
+
+    <h3>Basic Rules:</h3>
+    <table>
+        <tr>
+            <th>Pattern</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><code>#</code></td>
+            <td>Comment line (ignored by Git)</td>
+            <td><code># This is a comment</code></td>
+        </tr>
+        <tr>
+            <td>Blank lines</td>
+            <td>Ignored (used for readability)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>filename</code></td>
+            <td>Ignore specific file</td>
+            <td><code>secret.txt</code></td>
+        </tr>
+        <tr>
+            <td><code>*.ext</code></td>
+            <td>Ignore all files with extension</td>
+            <td><code>*.log</code></td>
+        </tr>
+        <tr>
+            <td><code>folder/</code></td>
+            <td>Ignore entire directory</td>
+            <td><code>node_modules/</code></td>
+        </tr>
+        <tr>
+            <td><code>**/pattern</code></td>
+            <td>Match in all directories</td>
+            <td><code>**/logs</code></td>
+        </tr>
+        <tr>
+            <td><code>!</code></td>
+            <td>Negate pattern (don't ignore)</td>
+            <td><code>!important.log</code></td>
+        </tr>
+        <tr>
+            <td><code>?</code></td>
+            <td>Match single character</td>
+            <td><code>file?.txt</code></td>
+        </tr>
+        <tr>
+            <td><code>[abc]</code></td>
+            <td>Match any character in brackets</td>
+            <td><code>file[123].txt</code></td>
+        </tr>
+    </table>
+
+    <h3>Wildcards:</h3>
+    <ul>
+        <li><code>*</code> - Matches zero or more characters (except /)</li>
+        <li><code>**</code> - Matches zero or more directories</li>
+        <li><code>?</code> - Matches exactly one character</li>
+        <li><code>[abc]</code> - Matches any one character from the set</li>
+        <li><code>[0-9]</code> - Matches any one digit</li>
+    </ul>
+
+    <!-- section 5 -->
+    <div class="page-break"></div>
+    <h2 id="section-5">5. Pattern Examples</h2>
+
+    <h3>Example 1: Ignore Specific File</h3>
+    <pre><code># Ignore a specific file
+config.txt</code></pre>
+
+    <h3>Example 2: Ignore All Files with Extension</h3>
+    <pre><code># Ignore all .log files
+*.log
+
+# Ignore all .tmp files
+*.tmp</code></pre>
+
+    <h3>Example 3: Ignore Directory</h3>
+    <pre><code># Ignore node_modules directory
+node_modules/
+
+# Ignore build directory
+build/</code></pre>
+
+    <h3>Example 4: Ignore Files in Specific Directory</h3>
+    <pre><code># Ignore all .txt files in logs/ directory only
+logs/*.txt
+
+# Ignore all files in temp/ directory
+temp/*</code></pre>
+
+    <h3>Example 5: Negation (Exception)</h3>
+    <pre><code># Ignore all .log files
+*.log
+
+# But don't ignore important.log
+!important.log</code></pre>
+
+    <h3>Example 6: Match Nested Directories</h3>
+    <pre><code># Ignore all logs directories anywhere in the project
+**/logs/
+
+# Ignore all .cache files anywhere
+**/*.cache</code></pre>
+
+    <h3>Example 7: Character Sets</h3>
+    <pre><code># Ignore test1.txt, test2.txt, test3.txt
+test[123].txt
+
+# Ignore all files starting with temp and one more char
+temp?.log</code></pre>
+
+    <!-- section 6 -->
+    <div class="page-break"></div>
+    <h2 id="section-6">6. Common .gitignore Patterns</h2>
+
+    <h3>Operating System Files</h3>
+    <pre><code># macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory</code></pre>
+
+    <h3>IDE and Editor Files</h3>
+    <pre><code># Visual Studio Code
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#</code></pre>
+
+    <h3>Build and Dependency Directories</h3>
+    <pre><code># Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+env/
+
+# Java
+target/
+*.class
+
+# .NET
+bin/
+obj/</code></pre>
+
+    <h3>Compiled Files and Archives</h3>
+    <pre><code># Compiled files
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.a
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar</code></pre>
+
+    <!-- section 7 -->
+    <div class="page-break"></div>
+    <h2 id="section-7">7. Language/Framework Specific</h2>
+
+    <h3>Python</h3>
+    <pre><code># Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment variables
+.env</code></pre>
+
+    <h3>Node.js / JavaScript</h3>
+    <pre><code># Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# Build output
+dist/
+build/
+out/
+
+# Environment
+.env
+.env.local
+
+# Testing
+coverage/</code></pre>
+
+    <h3>Java</h3>
+    <pre><code># Compiled class files
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+
+# Gradle
+.gradle/
+build/</code></pre>
+
+    <h3>C/C++</h3>
+    <pre><code># Compiled Object files
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Libraries
+*.lib
+*.a
+*.so
+*.dll
+
+# CMake
+CMakeCache.txt
+CMakeFiles/</code></pre>
+
+    <!-- section 8 -->
+    <div class="page-break"></div>
+    <h2 id="section-8">8. Global .gitignore</h2>
+
+    <p>
+        A global .gitignore file applies to all Git repositories on your computer. It's useful for ignoring 
+        user-specific or OS-specific files that you never want to track.
+    </p>
+
+    <h3>Setting Up Global .gitignore:</h3>
+
+    <h4>Step 1: Create the global ignore file</h4>
+    <pre><code># Create file in home directory
+touch ~/.gitignore_global</code></pre>
+
+    <h4>Step 2: Configure Git to use it</h4>
+    <pre><code>git config --global core.excludesfile ~/.gitignore_global</code></pre>
+
+    <h4>Step 3: Add your global patterns</h4>
+    <pre><code># Operating System Files
+.DS_Store
+Thumbs.db
+
+# Editor Files
+.vscode/
+.idea/
+*.swp
+
+# Personal Notes
+TODO.md
+NOTES.md</code></pre>
+
+    <h3>Benefits:</h3>
+    <ul>
+        <li>Don't need to add OS/editor files to every project's .gitignore</li>
+        <li>Keep project .gitignore files focused on project-specific ignores</li>
+        <li>Avoid polluting team repositories with personal preferences</li>
+    </ul>
+
+    <div class="note">
+        <strong>💡 Best Practice:</strong> Use global .gitignore for personal/environment files, and 
+        project .gitignore for project-specific files (dependencies, build outputs, etc.).
+    </div>
+
+    <!-- section 9 -->
+    <div class="page-break"></div>
+    <h2 id="section-9">9. Troubleshooting</h2>
+
+    <h3>Problem 1: .gitignore Not Working</h3>
+    <p><strong>Cause:</strong> Files are already tracked by Git.</p>
+    <p><strong>Solution:</strong> Remove cached files from Git's tracking:</p>
+    <pre><code># Remove specific file from tracking
+git rm --cached filename
+
+# Remove directory from tracking
+git rm -r --cached directory/
+
+# Remove all files and re-add (apply new .gitignore)
+git rm -r --cached .
+git add .
+git commit -m "Apply .gitignore rules"</code></pre>
+
+    <h3>Problem 2: Need to Ignore Already Committed File</h3>
+    <p><strong>Steps:</strong></p>
+    <ol>
+        <li>Add the file pattern to .gitignore</li>
+        <li>Remove it from Git's tracking: <code>git rm --cached filename</code></li>
+        <li>Commit the changes</li>
+    </ol>
+
+    <h3>Problem 3: Want to Track File Inside Ignored Directory</h3>
+    <p><strong>Solution:</strong> Use negation pattern:</p>
+    <pre><code># Ignore entire logs directory
+logs/
+
+# But track important.log
+!logs/important.log</code></pre>
+
+    <h3>Problem 4: Testing .gitignore Patterns</h3>
+    <p><strong>Command:</strong> Check if a file would be ignored:</p>
+    <pre><code>git check-ignore -v filename</code></pre>
+    <p>This shows which pattern in .gitignore is matching the file.</p>
+
+    <h3>Problem 5: Wrong File Extension</h3>
+    <p>Make sure .gitignore doesn't have a hidden extension like <code>.gitignore.txt</code></p>
+    <p><strong>Check:</strong></p>
+    <pre><code># On Linux/macOS
+ls -la | grep gitignore
+
+# Should show: .gitignore (not .gitignore.txt)</code></pre>
+
+    <!-- section 10 -->
+    <div class="page-break"></div>
+    <h2 id="section-10">10. Best Practices</h2>
+
+    <h3>Do's:</h3>
+    <ul>
+        <li><span class="success">✓</span> Add .gitignore before your first commit</li>
+        <li><span class="success">✓</span> Use comments to organize sections</li>
+        <li><span class="success">✓</span> Keep patterns simple and readable</li>
+        <li><span class="success">✓</span> Use blank lines for better readability</li>
+        <li><span class="success">✓</span> Ignore build outputs and dependencies</li>
+        <li><span class="success">✓</span> Ignore sensitive files (.env, credentials)</li>
+        <li><span class="success">✓</span> Use templates from github.com/github/gitignore</li>
+        <li><span class="success">✓</span> Review and update .gitignore regularly</li>
+    </ul>
+
+    <h3>Don'ts:</h3>
+    <ul>
+        <li><span class="important">✗</span> Don't commit sensitive data, then add to .gitignore</li>
+        <li><span class="important">✗</span> Don't ignore source code files</li>
+        <li><span class="important">✗</span> Don't use overly complex patterns</li>
+        <li><span class="important">✗</span> Don't ignore configuration files needed by team</li>
+        <li><span class="important">✗</span> Don't mix tabs and spaces for indentation</li>
+    </ul>
+
+    <h3>Sample Complete .gitignore</h3>
+    <pre><code># ===========================
+# Project: My Web Application
+# ===========================
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build Output
+dist/
+build/
+*.min.js
+*.min.css
+
+# Environment Variables
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Temporary Files
+*.tmp
+*.temp
+.cache/</code></pre>
+
+    <h3>Key Takeaways:</h3>
+    <div class="note">
+        <ul style="margin-top: 10px;">
+            <li>Start every project with a .gitignore file</li>
+            <li>Never commit sensitive information</li>
+            <li>Ignore generated/compiled files</li>
+            <li>Use global .gitignore for personal files</li>
+            <li>Test patterns with <code>git check-ignore</code></li>
+            <li>Remove cached files if .gitignore isn't working</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p><strong>Understanding .gitignore</strong> - A Resource Document</p>
+        <p>Git & GitHub Workshop | NEUB CSE Society</p>
+        <p>Mentor: Mahfuz Ibne Syful</p>
+    </div>
+</body>
+
+</html>
