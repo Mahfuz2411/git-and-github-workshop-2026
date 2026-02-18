@@ -1,3 +1,12 @@
 .venv/
 *.py
 *.pptx
+
+
+banner.svg
+class02_slideshow.html.backup
+git_github_class1.md
+git_github_class2.md
+git_github_class3.md
+README_generate_ppt.md
+requirements.txt
