@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding URLs - Resource Document</title>
+    <style>
+        @page {
+            margin: 2cm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: white;
+            color: #000;
+            line-height: 1.6;
+            padding: 40px 60px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            color: #333;
+            font-style: italic;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #000;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+
+        h2::after {
+            content: "";
+            display: block;
+            height: 100px;
+            margin-bottom: -100px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #000;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+        }
+
+        h3::after {
+            content: "";
+            display: block;
+            height: 80px;
+            margin-bottom: -80px;
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            text-align: justify;
+            color: #000;
+            orphans: 3;
+            widows: 3;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+
+        li {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: #000;
+        }
+
+        h3 + ul,
+        h3 + ol,
+        h3 + p,
+        h2 + p,
+        h2 + ul,
+        h2 + ol {
+            page-break-before: avoid;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: #000;
+            border: 1px solid #ccc;
+        }
+
+        pre {
+            background: #f8f8f8;
+            border: 1px solid #999;
+            border-left: 4px solid #333;
+            padding: 15px;
+            margin: 12px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            page-break-inside: avoid;
+        }
+
+        .url-example {
+            background: #f5f5f5;
+            border: 1px solid #999;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05rem;
+            word-break: break-all;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+
+        .highlight {
+            background: #e0e0e0;
+            padding: 2px 4px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .important {
+            color: #c00;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #060;
+            font-weight: bold;
+        }
+
+        .note {
+            background: #f0f0f0;
+            border-left: 4px solid #666;
+            padding: 15px;
+            margin: 18px 0;
+            page-break-inside: avoid;
+        }
+
+        .warning {
+            background: #f5f5f5;
+            border-left: 4px solid #999;
+            padding: 15px;
+            margin: 18px 0;
+            page-break-inside: avoid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 18px 0;
+            page-break-inside: avoid;
+        }
+
+        th, td {
+            border: 1px solid #666;
+            padding: 10px;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background: #e0e0e0;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid #000;
+            text-align: center;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .url-colored {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+        }
+
+        .protocol { color: #c00; font-weight: bold; }
+        .domain { color: #060; font-weight: bold; }
+        .port { color: #009; font-weight: bold; }
+        .path { color: #000; font-weight: bold; }
+        .query { color: #930; font-weight: bold; }
+        .fragment { color: #606; font-weight: bold; }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Cover Page Styles */
+        .cover-page {
+            text-align: center;
+            padding: 100px 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            page-break-after: always;
+        }
+
+        .cover-page h1 {
+            font-size: 4rem;
+            color: #000;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            border-bottom: 4px solid #000;
+            padding-bottom: 20px;
+        }
+
+        .cover-page .subtitle {
+            font-size: 1.8rem;
+            color: #333;
+            font-style: italic;
+            margin-bottom: 60px;
+        }
+
+        .cover-page .metadata {
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .cover-page .metadata p {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .cover-page .logo {
+            font-size: 6rem;
+            margin-bottom: 40px;
+            opacity: 0.2;
+        }
+
+        /* Table of Contents Styles */
+        .toc-page {
+            page-break-after: always;
+            padding: 60px 40px;
+        }
+
+        .toc-page h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #000;
+            padding-bottom: 15px;
+        }
+
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 1px dotted #ccc;
+            padding-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: #000;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .toc-list a:hover {
+            color: #333;
+            background: #f0f0f0;
+            padding-left: 10px;
+        }
+
+        .toc-number {
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .toc-title {
+            flex: 1;
+        }
+
+        .toc-page-num {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .cover-page {
+                padding: 80px 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cover Page -->
+    <div class="cover-page">
+        <div class="logo">🌐</div>
+        <h1>Understanding URLs</h1>
+        <p class="subtitle">Uniform Resource Locator<br>The Address of the Web</p>
+        <div class="metadata">
+            <p><strong>A Comprehensive Guide</strong></p>
+            <p>Git & GitHub Workshop</p>
+            <p>NEUB CSE Society</p>
+            <p style="margin-top: 40px; font-size: 1rem; color: #666;">Prepared by: Mahfuz Ibne Syful</p>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="toc-page">
+        <h2>Table of Contents</h2>
+        <ul class="toc-list">
+            <li>
+                <a href="#section-1">
+                    <span><span class="toc-number">1.</span><span class="toc-title">What is a URL?</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-2">
+                    <span><span class="toc-number">2.</span><span class="toc-title">URL Structure</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-3">
+                    <span><span class="toc-number">3.</span><span class="toc-title">Protocol (Scheme)</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-4">
+                    <span><span class="toc-number">4.</span><span class="toc-title">Domain Name</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-5">
+                    <span><span class="toc-number">5.</span><span class="toc-title">Path</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-6">
+                    <span><span class="toc-number">6.</span><span class="toc-title">Query String (Parameters)</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-7">
+                    <span><span class="toc-number">7.</span><span class="toc-title">Fragment (Anchor)</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-8">
+                    <span><span class="toc-number">8.</span><span class="toc-title">URL Encoding</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-9">
+                    <span><span class="toc-number">9.</span><span class="toc-title">Absolute vs Relative URLs</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-10">
+                    <span><span class="toc-number">10.</span><span class="toc-title">URL Best Practices</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-11">
+                    <span><span class="toc-number">11.</span><span class="toc-title">Common URL Examples</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#section-12">
+                    <span><span class="toc-number">12.</span><span class="toc-title">Summary</span></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- section 1 -->
+    <div class="page-break"></div>
+    <h2 id="section-1">1. What is a URL?</h2>
+    <p>
+        A <span class="highlight">URL (Uniform Resource Locator)</span> is the address used to access resources on the internet. 
+        It's the text you type into your browser's address bar to visit a website or access a specific resource online.
+    </p>
+    <div class="url-example">
+        https://www.github.com/Mahfuz2411/my-repo
+    </div>
+    <p><strong>URLs are used to:</strong></p>
+    <ul>
+        <li>Access web pages and applications</li>
+        <li>Load images, videos, and other media files</li>
+        <li>Create links between different resources</li>
+        <li>Make API requests to servers</li>
+        <li>Download files from the internet</li>
+    </ul>
+
+
+    <!-- section 2 -->
+    <div class="page-break"></div>
+    <h2 id="section-2">2. URL Structure</h2>
+    <p>A URL consists of several components, each serving a specific purpose:</p>
+    <div class="url-example url-colored">
+        <span class="protocol">https://</span><span class="domain">www.example.com</span><span class="port">:8080</span><span class="path">/path/to/page</span><span class="query">?key=value</span><span class="fragment">#section</span>
+    </div>
+    
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Example</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><strong>Protocol</strong></td>
+            <td><code>https://</code></td>
+            <td>How to access the resource</td>
+        </tr>
+        <tr>
+            <td><strong>Domain</strong></td>
+            <td><code>www.example.com</code></td>
+            <td>Server address (hostname)</td>
+        </tr>
+        <tr>
+            <td><strong>Port</strong></td>
+            <td><code>:8080</code></td>
+            <td>Port number (optional, default 80/443)</td>
+        </tr>
+        <tr>
+            <td><strong>Path</strong></td>
+            <td><code>/path/to/page</code></td>
+            <td>Specific resource location</td>
+        </tr>
+        <tr>
+            <td><strong>Query String</strong></td>
+            <td><code>?key=value</code></td>
+            <td>Parameters (optional)</td>
+        </tr>
+        <tr>
+            <td><strong>Fragment</strong></td>
+            <td><code>#section</code></td>
+            <td>Section within page (optional)</td>
+        </tr>
+    </table>
+
+
+
+    <!-- section 3 -->
+    <div class="page-break"></div>
+    <h2 id="section-3">3. Protocol (Scheme)</h2>
+    <p>The protocol defines how to access the resource. It tells the browser which method to use for communication.</p>
+    
+    <h3>Common Protocols:</h3>
+    <ul>
+        <li><code>http://</code> - HyperText Transfer Protocol (unsecured)</li>
+        <li><code>https://</code> - HTTP Secure (encrypted with SSL/TLS) <span class="success">✓ Recommended</span></li>
+        <li><code>ftp://</code> - File Transfer Protocol</li>
+        <li><code>mailto:</code> - Email address link</li>
+        <li><code>file://</code> - Local file system access</li>
+    </ul>
+
+    <div class="warning">
+        <strong>⚠ Security Note:</strong> Always use <code>https://</code> when handling sensitive information. 
+        HTTPS encrypts the communication between your browser and the server, protecting data from interception.
+    </div>
+
+
+
+
+    <!-- section 4 -->
+    <div class="page-break"></div>
+    <h2 id="section-4">4. Domain Name</h2>
+    <p>The domain name represents the address of the server hosting the resource. It's a human-readable alternative to IP addresses.</p>
+    
+    <div class="url-example">
+        www.github.com
+    </div>
+
+    <h3>Domain Structure:</h3>
+    <ul>
+        <li><strong>Subdomain:</strong> <code>www</code>, <code>blog</code>, <code>api</code>, <code>cdn</code> (optional prefix)</li>
+        <li><strong>Domain:</strong> <code>github</code>, <code>google</code>, <code>amazon</code> (main name)</li>
+        <li><strong>TLD (Top-Level Domain):</strong> <code>.com</code>, <code>.org</code>, <code>.io</code>, <code>.edu</code></li>
+    </ul>
+
+    <h3>Examples:</h3>
+    <ul>
+        <li><code>github.com</code> - Main domain</li>
+        <li><code>api.github.com</code> - API subdomain</li>
+        <li><code>docs.github.com</code> - Documentation subdomain</li>
+    </ul>
+
+
+
+    <!-- section 5 -->
+    <div class="page-break"></div>
+    <h2 id="section-5">5. Path</h2>
+    <p>The path specifies the location of a specific resource on the server. It resembles a file system path.</p>
+
+    <div class="url-example">
+        https://github.com<span class="important">/Mahfuz2411/my-repo/blob/main/README.md</span>
+    </div>
+
+    <h3>Path Characteristics:</h3>
+    <ul>
+        <li>Separated by forward slashes (<code>/</code>)</li>
+        <li>Case-sensitive on many servers (Linux/Unix)</li>
+        <li>Can represent folders, files, or logical routes</li>
+        <li>May not correspond to actual file system structure</li>
+    </ul>
+
+    <h3>Common Path Examples:</h3>
+    <ul>
+        <li><code>/users/profile</code> - User profile page</li>
+        <li><code>/products/123</code> - Product with ID 123</li>
+        <li><code>/api/v1/data</code> - API endpoint version 1</li>
+        <li><code>/blog/2024/01/post-title</code> - Blog post with date structure</li>
+    </ul>
+
+
+    <!-- section 6 -->
+    <div class="page-break"></div>
+    <h2 id="section-6">6. Query String (Parameters)</h2>
+    <p>Query strings pass additional data to the server as key-value pairs. They're commonly used for filtering, searching, and tracking.</p>
+
+    <div class="url-example">
+        https://example.com/search<span class="important">?q=git&lang=en&page=2</span>
+    </div>
+
+    <h3>Query String Syntax:</h3>
+    <ul>
+        <li>Starts with a question mark (<code>?</code>)</li>
+        <li>Multiple parameters separated by ampersand (<code>&</code>)</li>
+        <li>Format: <code>key=value</code></li>
+        <li>Special characters should be URL-encoded</li>
+    </ul>
+
+    <h3>Common Use Cases:</h3>
+    <ul>
+        <li><strong>Search queries:</strong> <code>?q=search+term</code></li>
+        <li><strong>Filters:</strong> <code>?category=books&price=low</code></li>
+        <li><strong>Pagination:</strong> <code>?page=2&limit=20</code></li>
+        <li><strong>Sorting:</strong> <code>?sort=date&order=desc</code></li>
+        <li><strong>Tracking:</strong> <code>?utm_source=email&utm_campaign=launch</code></li>
+    </ul>
+
+
+    <!-- section 7 -->
+    <div class="page-break"></div>
+    <h2 id="section-7">7. Fragment (Anchor)</h2>
+    <p>Fragments point to a specific section within a page. They're processed by the browser, not sent to the server.</p>
+
+    <div class="url-example">
+        https://example.com/docs<span class="important">#introduction</span>
+    </div>
+
+    <h3>Fragment Properties:</h3>
+    <ul>
+        <li>Starts with a hash symbol (<code>#</code>)</li>
+        <li><span class="important">NOT sent to the server</span> (client-side only)</li>
+        <li>Jumps to element with matching <code>id</code> attribute</li>
+        <li>Used for in-page navigation and single-page applications</li>
+    </ul>
+
+    <div class="note">
+        <strong>📌 Note:</strong> Fragments are useful for creating table of contents, jump links, 
+        and bookmarking specific sections of long documents.
+    </div>
+
+
+    <!-- section 8 -->
+    <div class="page-break"></div>
+    <h2 id="section-8">8. URL Encoding</h2>
+    <p>Special characters in URLs must be encoded to ensure proper transmission. URLs can only contain a limited set of ASCII characters.</p>
+
+    <h3>Why URL Encoding is Necessary:</h3>
+    <p>
+        URLs can only safely use specific characters from the ASCII set. Characters outside this range, 
+        or characters with special meaning in URLs (like <code>?</code>, <code>&</code>, <code>=</code>), 
+        must be converted to a percent-encoded format.
+    </p>
+
+    <h3>Common Encodings:</h3>
+    <table>
+        <tr>
+            <th>Character</th>
+            <th>Encoded</th>
+            <th>Usage</th>
+        </tr>
+        <tr>
+            <td>Space</td>
+            <td><code>%20</code> or <code>+</code></td>
+            <td>Query parameters</td>
+        </tr>
+        <tr>
+            <td><code>?</code></td>
+            <td><code>%3F</code></td>
+            <td>Query string delimiter</td>
+        </tr>
+        <tr>
+            <td><code>&</code></td>
+            <td><code>%26</code></td>
+            <td>Parameter separator</td>
+        </tr>
+        <tr>
+            <td><code>=</code></td>
+            <td><code>%3D</code></td>
+            <td>Key-value separator</td>
+        </tr>
+        <tr>
+            <td><code>#</code></td>
+            <td><code>%23</code></td>
+            <td>Fragment identifier</td>
+        </tr>
+        <tr>
+            <td><code>/</code></td>
+            <td><code>%2F</code></td>
+            <td>Path separator</td>
+        </tr>
+    </table>
+
+
+    <h3>Example:</h3>
+    <div class="url-example">
+        <strong>Before encoding:</strong> hello world! how are you?<br>
+        <strong>After encoding:</strong> hello%20world%21%20how%20are%20you%3F
+    </div>
+
+
+    <!-- section 9 -->
+    <div class="page-break"></div>
+    <h2 id="section-9">9. Absolute vs Relative URLs</h2>
+    
+    <h3>Absolute URL</h3>
+    <p>A complete URL including protocol and domain. Can be used from any location.</p>
+    <div class="url-example">
+        https://github.com/Mahfuz2411/my-repo
+    </div>
+
+    <h3>Relative URL</h3>
+    <p>A path relative to the current location. Used within the same website.</p>
+    <div class="url-example">
+        /about/team<br>
+        ../images/logo.png<br>
+        contact.html
+    </div>
+
+    <h3>Relative URL Notation:</h3>
+    <ul>
+        <li><code>/</code> - Root of current domain</li>
+        <li><code>../</code> - Parent directory (go up one level)</li>
+        <li><code>./</code> - Current directory (can be omitted)</li>
+        <li><code>filename.html</code> - File in current directory</li>
+    </ul>
+
+
+    <!-- section 10 -->
+    <div class="page-break"></div>
+    <h2 id="section-10">10. URL Best Practices</h2>
+
+    <h3>Do's:</h3>
+    <ul>
+        <li><span class="success">✓</span> Keep URLs short, descriptive, and readable</li>
+        <li><span class="success">✓</span> Use hyphens (<code>-</code>) to separate words, not underscores</li>
+        <li><span class="success">✓</span> Use lowercase letters for consistency</li>
+        <li><span class="success">✓</span> Make URLs meaningful and SEO-friendly</li>
+        <li><span class="success">✓</span> Use HTTPS for security</li>
+        <li><span class="success">✓</span> Keep URL structure consistent across your site</li>
+    </ul>
+
+    <h3>Don'ts:</h3>
+    <ul>
+        <li><span class="important">✗</span> Don't expose sensitive data in URLs (passwords, tokens)</li>
+        <li><span class="important">✗</span> Don't change URLs without proper redirects (breaks bookmarks)</li>
+        <li><span class="important">✗</span> Don't use special characters unnecessarily</li>
+        <li><span class="important">✗</span> Don't make URLs excessively long</li>
+        <li><span class="important">✗</span> Don't use session IDs in URLs (security risk)</li>
+    </ul>
+
+    <h3>Good vs Bad Examples:</h3>
+    <table>
+        <tr>
+            <th>Good URL</th>
+            <th>Bad URL</th>
+        </tr>
+        <tr>
+            <td><code>/blog/understanding-git</code></td>
+            <td><code>/page.php?id=12345</code></td>
+        </tr>
+        <tr>
+            <td><code>/products/laptop-dell-xps</code></td>
+            <td><code>/products?type=laptop&brand=Dell</code></td>
+        </tr>
+        <tr>
+            <td><code>/about/team</code></td>
+            <td><code>/about_us/our_team.html</code></td>
+        </tr>
+    </table>
+
+
+
+    <!-- section 11 -->
+    <div class="page-break"></div>
+    <h2 id="section-11">11. Common URL Examples</h2>
+
+    <h3>GitHub Repository:</h3>
+    <div class="url-example">
+        https://github.com/Mahfuz2411/my-repo
+    </div>
+
+    <h3>Search Query:</h3>
+    <div class="url-example">
+        https://www.google.com/search?q=git+tutorial&hl=en
+    </div>
+
+    <h3>API Endpoint:</h3>
+    <div class="url-example">
+        https://api.github.com/users/Mahfuz2411/repos
+    </div>
+
+    <h3>Documentation with Anchor:</h3>
+    <div class="url-example">
+        https://git-scm.com/docs/git-commit#_options
+    </div>
+
+    <h3>YouTube Video:</h3>
+    <div class="url-example">
+        https://www.youtube.com/watch?v=dQw4w9WgXcQ
+    </div>
+
+    <h3>E-commerce Product:</h3>
+    <div class="url-example">
+        https://example.com/products/electronics/laptop?color=silver&storage=512gb
+    </div>
+
+
+
+    <!-- section 12 -->
+    <div class="page-break"></div>
+    <h2 id="section-12">12. Summary</h2>
+    <p>
+        Understanding URLs is fundamental to web development and internet usage. A URL is more than just 
+        an address—it's a structured format that communicates how, where, and what resource to access. 
+        By following best practices and understanding each component, you can create clean, secure, and 
+        user-friendly URLs that enhance both user experience and search engine optimization.
+    </p>
+
+    <div class="note">
+        <strong>Key Takeaways:</strong>
+        <ul style="margin-top: 10px;">
+            <li>Always use HTTPS for secure communication</li>
+            <li>Keep URLs simple, readable, and descriptive</li>
+            <li>Understand the difference between absolute and relative URLs</li>
+            <li>Encode special characters properly</li>
+            <li>Never expose sensitive information in URLs</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p><strong>Understanding URLs</strong> - A Resource Document</p>
+        <p>Git & GitHub Workshop | NEUB CSE Society</p>
+        <p>Mentor: Mahfuz Ibne Syful</p>
+    </div>
+</body>
+
+</html>
